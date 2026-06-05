@@ -2,7 +2,7 @@
 
 <p>
   <a href="https://github.com/allthingsN/openwright-examples/actions"><img src="https://github.com/allthingsN/openwright-examples/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://codecov.io/gh/allthingsN/openwright-examples"><img src="https://codecov.io/gh/allthingsN/openwright-examples/graph/badge.svg" alt="coverage"></a>
+  <a href="https://github.com/allthingsN/openwright-examples/actions"><img src="https://raw.githubusercontent.com/allthingsN/openwright-examples/badges/coverage.svg" alt="coverage"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License"></a>
 </p>
 

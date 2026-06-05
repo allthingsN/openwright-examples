@@ -1,6 +1,12 @@
 name: ci
 
-on: [push, pull_request]
+on:
+  push:
+    branches-ignore: [badges]   # 'badges' holds only the generated coverage SVG
+  pull_request:
+
+permissions:
+  contents: read   # least privilege; the coverage-badge job opts into write below
 
 jobs:
   lint:
@@ -23,13 +29,33 @@ jobs:
         run: pytest --cov=examples --cov-report=xml --cov-report=term-missing -q
       - name: Coverage summary → job summary
         run: coverage report --format=markdown >> "$GITHUB_STEP_SUMMARY"
-      - name: Publish coverage to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          files: ./coverage.xml
-          fail_ci_if_error: false
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
         with:
           name: coverage-examples
           path: coverage.xml
+
+  # Self-hosted coverage badge (no external service): SVG → orphan 'badges' branch.
+  coverage-badge:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: coverage-examples
+          path: cov
+      - run: |
+          python -m pip install "genbadge[coverage]"
+          genbadge coverage -i cov/coverage.xml -o coverage.svg
+      - name: Publish badge to 'badges' branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch --orphan badges
+          git add -f coverage.svg
+          git commit -m "ci: update coverage badge"
+          git push -f origin badges
