@@ -1,0 +1,6 @@
+# OpenWright (the published packages)
+openwright-core>=0.7,<0.8
+openwright-openai-agents>=0.4,<0.5
+
+# the agent framework these examples are built on
+openai-agents>=0.1
